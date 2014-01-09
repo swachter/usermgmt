@@ -1,0 +1,18 @@
+@(form: Form[Customer], insertNotUpdate: Boolean)(implicit flash: Flash)
+
+@main(if (insertNotUpdate) "Add Customer" else "Edit Customer") {
+  @helper.form(action = if (insertNotUpdate) routes.Application.insertCustomer else routes.Application.updateCustomer) {
+  	@if(insertNotUpdate) {
+      @helper.inputText(form("login"))
+    } else {
+      @helper.inputText(form("login"), 'readonly -> "true")
+  	}
+    @helper.inputDate(form("validFrom"))
+    @helper.inputDate(form("validUntil"))
+    @helper.inputText(form("numUsers"))
+    @helper.inputText(form("staemme"))
+    <div class="form-actions">
+      <button type="submit">Save</button>
+    </div>
+  }
+}

@@ -1,0 +1,11 @@
+@(customer: Customer)
+
+<table>
+  <tr><td>login</td><td>@customer.login</td></tr>
+  <tr><td>user password set</td><td>@customer.pwdHash.isDefined</td></tr>
+  <tr><td>admin password set</td><td>@customer.adminPwdHash.isDefined</td></tr>
+  <tr><td>valid from</td><td>@customer.validFrom</td></tr>
+  <tr><td>valid until</td><td>@customer.validUntil</td></tr>
+  <tr><td>number of users</td><td>@customer.numUsers</td></tr>
+  <tr><td>staemme</td><td>@customer.staemme.getOrElse("")</td></tr>
+</table>
