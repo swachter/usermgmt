@@ -3,6 +3,11 @@
 @main("Login Anzeigen") {
 	@customerTable(customer, true)
 	
-  <a class="btn btn-warning" role="button" href="@routes.Application.deleteCustomer(customer.login, None)">Lösche Login</a>
+	@if(request.flash.get("confirmeDelete").isDefined) {
+      <a class="btn btn-danger" href="@routes.Application.deleteCustomer(customer.login, true)">Login wirklich löschen</a>
+      <a class="btn btn-default" href="@routes.Application.showCustomer(customer.login)">Abbrechen</a>
+    } else {
+      <a class="btn btn-warning" href="@routes.Application.deleteCustomer(customer.login, false)">Login löschen</a>
+    }
 	
 }

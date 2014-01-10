@@ -93,19 +93,12 @@ object Application extends Controller {
     Redirect(routes.Application.showCustomer(login)).flashing("success" -> s"""${if (setNotClear) "set" else "cleared"} ${if (adminNotUser) "admin" else "user"} password${if (setNotClear) "to " + password.get else ""}""")
   }
   
-  def deleteCustomer(login: String, confirm: Option[Boolean]) = Action { implicit request =>
-    if (confirm.getOrElse(false)) {
+  def deleteCustomer(login: String, confirmed: Boolean) = Action { implicit request =>
+    if (confirmed) {
       Customers.delete(login)
-      Redirect(routes.Application.list)
-    } else if (confirm.isDefined) {
-      Redirect(routes.Application.showCustomer(login))
+      Redirect(routes.Application.index)
     } else {
-	    val customer = Customers.findByLogin(login)
-	    if (customer.isDefined) {
-	      Ok(views.html.deleteCustomer(customer.get))
-	    } else {
-	      Redirect(routes.Application.list).flashing("error" -> ("unbekannter Login: " + login))
-	    }
+      Redirect(routes.Application.showCustomer(login)).flashing("confirmeDelete" -> "true")
     }
   }
   

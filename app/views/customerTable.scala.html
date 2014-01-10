@@ -30,7 +30,8 @@
 
 @glyphiconWithDropDown(opt: Option[_], adminNotUser: Boolean) = {
 <div class="dropdown">
-  <button class="btn dropdown-toggle" type="button" id="dropdownMenu-@adminNotUser" data-toggle="dropdown">
+  <button class="btn dropdown-toggle" type="button" id="dropdownMenu-@adminNotUser" data-toggle="dropdown"
+    data-content="@{s"""${if (adminNotUser) "Administrator" else "Benutzer"}-Paßwort ist ${if (opt.isEmpty) "nicht " else ""}gesetzt"""}">
     @glyphicon(opt)
     <span class="caret"></span>
   </button>

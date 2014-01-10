@@ -24,4 +24,4 @@ GET     /show/:login                controllers.Application.showCustomer(login)
 
 GET     /modify/:login              controllers.Application.modifyPassword(login, setNotClear: Boolean, adminNotUser: Boolean)
 
-GET     /delete/:login              controllers.Application.deleteCustomer(login, confirmed: Option[Boolean])
+GET     /delete/:login              controllers.Application.deleteCustomer(login, confirmed: Boolean)
