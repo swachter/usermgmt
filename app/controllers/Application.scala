@@ -11,8 +11,24 @@ import models.CustomerTable
 object Application extends Controller {
 
   def index = Action { implicit request =>
-    Ok(views.html.index("Your new application is ready."))
+    Ok(views.html.index())
   }
+  
+  def navBar = Action { implicit request => {
+    val qs = request.queryString
+    def searchText = qs.get("text").map(_.mkString).filter(!_.isEmpty())
+    val response = if (qs.contains("show")) {
+      searchText.map(s => Redirect(routes.Application.showCustomer(s))).getOrElse(Redirect(routes.Application.index).flashing("error" -> "fehlende Eingabe"))
+    } else if (qs.contains("edit")) {
+      searchText.map(s => Redirect(routes.Application.editCustomer(s))).getOrElse(Redirect(routes.Application.index).flashing("error" -> "fehlende Eingabe"))
+    } else if (qs.contains("new")) {
+      Redirect(routes.Application.newCustomer)
+    } else {
+      // search
+      Redirect(routes.Application.list)
+    }
+    response.withSession(request.session + ("search" -> searchText.getOrElse("")))
+  }}
   
   def list = Action { implicit request =>
     val customers = Customers.list
@@ -34,7 +50,7 @@ object Application extends Controller {
         val form = customerForm.fill(customer.get)
         Ok(views.html.customerForm(form, false))  
       } else {
-        Redirect(routes.Application.list).flashing("error" -> ("unknown login: " + login))
+        Redirect(routes.Application.index).flashing("error" -> ("unbekannter Login: " + login))
       }
     }
   }
@@ -43,7 +59,7 @@ object Application extends Controller {
     val cf = customerForm.bindFromRequest
     cf.fold(
       form => 
-        Redirect(routes.Application.newCustomer()).flashing(Flash(form.data) + ("error" -> "Customer not saved")),
+        Redirect(routes.Application.newCustomer()).flashing(Flash(form.data) + ("error" -> "Login wurde nicht gespeichert")),
       customer => {
         Customers.insert(customer)
         Redirect(routes.Application.showCustomer(customer.login))
@@ -55,7 +71,7 @@ object Application extends Controller {
     val cf = customerForm.bindFromRequest
     cf.fold(
       form => 
-        Redirect(routes.Application.editCustomer(form.data("login"))).flashing(Flash(form.data) + ("error" -> "Customer not updated")),
+        Redirect(routes.Application.editCustomer(form.data("login"))).flashing(Flash(form.data) + ("error" -> "Login wurde nicht aktualisiert")),
       customer => {
         Customers.update(customer)
         Redirect(routes.Application.showCustomer(customer.login))
@@ -68,7 +84,7 @@ object Application extends Controller {
     if (customer.isDefined) {
       Ok(views.html.showCustomer(customer.get))
     } else {
-      Redirect(routes.Application.list).flashing("error" -> ("unknown login: " + login))
+      Redirect(routes.Application.index).flashing("error" -> ("unbekannter Login: " + login))
     }
   }
   
@@ -88,7 +104,7 @@ object Application extends Controller {
 	    if (customer.isDefined) {
 	      Ok(views.html.deleteCustomer(customer.get))
 	    } else {
-	      Redirect(routes.Application.list).flashing("error" -> ("unknown login: " + login))
+	      Redirect(routes.Application.list).flashing("error" -> ("unbekannter Login: " + login))
 	    }
     }
   }
@@ -106,5 +122,5 @@ object Application extends Controller {
         c => Some((c.login, c.validFrom, c.validUntil, c.numUsers, c.staemme))
     )
   )
-  
+ 
 }

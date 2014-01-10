@@ -1,6 +1,6 @@
-@(customers: List[Customer])(implicit flash: Flash)
+@(customers: List[Customer])(implicit request: Request[_])
 
-@main("All Customers") {
+@main("Suche Logins") {
   <table>
     @for(c <- customers) {
       <tr>

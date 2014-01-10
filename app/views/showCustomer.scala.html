@@ -1,13 +1,8 @@
-@(customer: Customer)(implicit flash: Flash)
+@(customer: Customer)(implicit request: Request[_])
 
-@main("Show Customer") {
-	@customerTable(customer)
+@main("Login Anzeigen") {
+	@customerTable(customer, true)
 	
-	<a href="@routes.Application.modifyPassword(customer.login, true, true)">Set Admin Password</a>
-	<a href="@routes.Application.modifyPassword(customer.login, true, false)">Set User Password</a>
-	<a href="@routes.Application.modifyPassword(customer.login, false, true)">Clear Admin Password</a>
-	<a href="@routes.Application.modifyPassword(customer.login, false, false)">Clear User Password</a>
-	<a href="@routes.Application.deleteCustomer(customer.login, None)">Delete Customer</a>
+  <a class="btn btn-warning" role="button" href="@routes.Application.deleteCustomer(customer.login, None)">Lösche Login</a>
 	
-	<a href="@routes.Application.editCustomer(customer.login)">edit</a>
 }

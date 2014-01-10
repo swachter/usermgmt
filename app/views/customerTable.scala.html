@@ -1,11 +1,47 @@
-@(customer: Customer)
+@(customer: Customer, pwdsModifyable: Boolean)
 
-<table>
-  <tr><td>login</td><td>@customer.login</td></tr>
-  <tr><td>user password set</td><td>@customer.pwdHash.isDefined</td></tr>
-  <tr><td>admin password set</td><td>@customer.adminPwdHash.isDefined</td></tr>
-  <tr><td>valid from</td><td>@customer.validFrom</td></tr>
-  <tr><td>valid until</td><td>@customer.validUntil</td></tr>
-  <tr><td>number of users</td><td>@customer.numUsers</td></tr>
-  <tr><td>staemme</td><td>@customer.staemme.getOrElse("")</td></tr>
+<table class="table table-striped table-condensed">
+  <tr><td>Login</td><td>@customer.login</td></tr>
+  <tr>
+    <td>Benutzer-Paßwort</td>
+    <td>
+      @pwdState(customer.pwdHash, false, pwdsModifyable)
+    </td>
+  </tr>
+  <tr>
+    <td>Administrator-Paßwort</td>
+    <td>
+      @pwdState(customer.adminPwdHash, true, pwdsModifyable)
+    </td>
+  </tr>
+  <tr><td>Gültig von</td><td>@customer.validFrom</td></tr>
+  <tr><td>Gültig bis</td><td>@customer.validUntil</td></tr>
+  <tr><td>Benutzeranzahl</td><td>@customer.numUsers</td></tr>
+  <tr><td>Stämme</td><td>@customer.staemme.getOrElse("")</td></tr>
 </table>
+
+@pwdState(opt: Option[_], adminNotUser: Boolean, withDropDown: Boolean) = {
+  @{if (withDropDown) {
+  	glyphiconWithDropDown(opt, adminNotUser)
+  } else {
+    glyphicon(opt)
+  }}
+}
+
+@glyphiconWithDropDown(opt: Option[_], adminNotUser: Boolean) = {
+<div class="dropdown">
+  <button class="btn dropdown-toggle" type="button" id="dropdownMenu-@adminNotUser" data-toggle="dropdown">
+    @glyphicon(opt)
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu-@adminNotUser">
+    <li role="presentation" class="dropdown-header">@{if (adminNotUser) "Administrator" else "Benutzer"}-Paßwort</li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="@routes.Application.modifyPassword(customer.login, true, adminNotUser)">Setzen</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="@routes.Application.modifyPassword(customer.login, false, adminNotUser)">Löschen</a></li>
+  </ul>
+</div>
+}
+
+@glyphicon(opt: Option[_]) = {
+  <span class="glyphicon glyphicon-@{if (opt.isDefined) "ok" else "minus"}"/>	
+}

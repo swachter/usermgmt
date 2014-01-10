@@ -1,10 +1,9 @@
-@(customer: Customer)(implicit flash: Flash)
+@(customer: Customer)(implicit request: Request[_])
 
 @main("Show Customer") {
-	@customerTable(customer)
+	@customerTable(customer, false)
 	
-	<a href="@routes.Application.deleteCustomer(customer.login, Some(true))">Really Delete Customer</a>
+	<a class="btn btn-danger" href="@routes.Application.deleteCustomer(customer.login, Some(true))">Really Delete Customer</a>
 	
-	<a href="@routes.Application.showCustomer(customer.login)">show</a>
 }
 

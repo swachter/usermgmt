@@ -1,6 +1,6 @@
-@(form: Form[Customer], insertNotUpdate: Boolean)(implicit flash: Flash)
+@(form: Form[Customer], insertNotUpdate: Boolean)(implicit request: Request[_])
 
-@main(if (insertNotUpdate) "Add Customer" else "Edit Customer") {
+@main(if (insertNotUpdate) "Login anlegen" else "Login editieren") {
   @helper.form(action = if (insertNotUpdate) routes.Application.insertCustomer else routes.Application.updateCustomer) {
   	@if(insertNotUpdate) {
       @helper.inputText(form("login"))

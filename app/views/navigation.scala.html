@@ -1,12 +1,26 @@
-@()
-<div class="navbar navbar-fixed-top">
-  <div class="navbar-inner">
-    <div class="container">
-      <ul class="nav">
-        <li class="divider-vertical"></li>
-        <li class="active"><a href="@routes.Application.list">list</a></li>
-        <li class="active"><a href="@routes.Application.newCustomer">new</a></li>
-      </ul>
-    </div>
+@()(implicit request: Request[_])
+<nav class="navbar navbar-default" role="navigation">
+  @* Brand and toggle get grouped for better mobile display *@
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a class="navbar-brand" href="@routes.Application.index">Loginverwaltung</a>
   </div>
-</div>
+ 
+  @* Collect the nav links, forms, and other content for toggling *@
+  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+    <form class="navbar-form navbar-left" role="search" action="@routes.Application.navBar">
+      <button type="submit" class="btn" name="new">Neu</button>
+      <div class="form-group">
+        <input type="text" class="form-control" placeholder="Login" name="text" value="@request.session.get("search").getOrElse("")">
+      </div>
+      <button type="submit" class="btn" name="show">Anzeigen</button>
+      <button type="submit" class="btn" name="edit">Editieren</button>
+      <button type="submit" class="btn" name="search">Suchen</button>
+    </form>
+  </div>
+</nav>
