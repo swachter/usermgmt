@@ -7,6 +7,9 @@ import models.Customers
 import play.api.data.Form
 import play.api.data.Forms._
 import models.CustomerTable
+import scala.util.Try
+import scala.util.Success
+import scala.util.Failure
 
 object Application extends Controller {
 
@@ -61,8 +64,13 @@ object Application extends Controller {
       form => 
         Redirect(routes.Application.newCustomer()).flashing(Flash(form.data) + ("error" -> "Login wurde nicht gespeichert")),
       customer => {
-        Customers.insert(customer)
-        Redirect(routes.Application.showCustomer(customer.login))
+        Try {
+          Customers.insert(customer)
+          Redirect(routes.Application.showCustomer(customer.login))
+        } match {
+          case Success(r) => r
+          case Failure(t) => Redirect(routes.Application.newCustomer()).flashing(Flash(cf.data) + ("error" -> ("Login wurde nicht gespeichert: " + t.getMessage())))
+        }
       }
     )
   }
