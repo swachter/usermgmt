@@ -1,1 +1,1 @@
-web: target/universal/stage/bin/usermgmt -Dhttp.port=${PORT} ${JAVA_OPTS}
+web: target/universal/stage/bin/usermgmt
