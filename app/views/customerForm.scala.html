@@ -1,16 +1,18 @@
 @(form: Form[Customer], insertNotUpdate: Boolean)(implicit request: Request[_])
 
+@import controllers.Application.bootstrap3FieldConstructor
+
 @main(if (insertNotUpdate) "Login anlegen" else "Login editieren") {
   @helper.form(action = if (insertNotUpdate) routes.Application.insertCustomer else routes.Application.updateCustomer) {
   	@if(insertNotUpdate) {
-      @helper.inputText(form("login"))
+      @helper.bootstrap3.inputText(form("login"), '_label -> "Login")
     } else {
-      @helper.inputText(form("login"), 'readonly -> "true")
+      @helper.bootstrap3.inputText(form("login"), '_label -> "Login", 'readonly -> "true")
   	}
-    @helper.inputDate(form("validFrom"))
-    @helper.inputDate(form("validUntil"))
-    @helper.inputText(form("numUsers"))
-    @helper.inputText(form("staemme"))
+    @helper.bootstrap3.inputDate(form("validFrom"), '_label -> "Gültig von")
+    @helper.bootstrap3.inputDate(form("validUntil"), '_label -> "Gültig bis")
+    @helper.bootstrap3.inputText(form("numUsers"), '_label -> "Anzahl Benutzer")
+    @helper.bootstrap3.inputText(form("staemme"), '_label -> "Stämme")
     <div class="form-actions">
       <button type="submit">Save</button>
     </div>

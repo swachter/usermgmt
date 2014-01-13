@@ -10,6 +10,8 @@ import models.CustomerTable
 import scala.util.Try
 import scala.util.Success
 import scala.util.Failure
+import views.html.helper.FieldConstructor
+import views.html.helper.FieldElements
 
 object Application extends Controller {
 
@@ -66,7 +68,7 @@ object Application extends Controller {
       customer => {
         Try {
           Customers.insert(customer)
-          Redirect(routes.Application.showCustomer(customer.login))
+          Redirect(routes.Application.showCustomer(customer.login)).flashing("success" -> "Login wurde gespeichert")
         } match {
           case Success(r) => r
           case Failure(t) => Redirect(routes.Application.newCustomer()).flashing(Flash(cf.data) + ("error" -> ("Login wurde nicht gespeichert: " + t.getMessage())))
@@ -98,7 +100,7 @@ object Application extends Controller {
   
   def modifyPassword(login: String, setNotClear: Boolean, adminNotUser: Boolean) = Action { implicit request =>
     val password = Customers.modifyPassword(login, setNotClear, adminNotUser)
-    Redirect(routes.Application.showCustomer(login)).flashing("success" -> s"""${if (setNotClear) "set" else "cleared"} ${if (adminNotUser) "admin" else "user"} password${if (setNotClear) "to " + password.get else ""}""")
+    Redirect(routes.Application.showCustomer(login)).flashing("success" -> s"""${if (adminNotUser) "Administrator" else "Benutzer"}-Paßwort wurde ${if (setNotClear) "gesetzt; neuer Wert: " + password.get else "gelöscht"}""")
   }
   
   def deleteCustomer(login: String, confirmed: Boolean) = Action { implicit request =>
@@ -123,5 +125,10 @@ object Application extends Controller {
         c => Some((c.login, c.validFrom, c.validUntil, c.numUsers, c.staemme))
     )
   )
+  
+  implicit val bootstrap3FieldConstructor = new FieldConstructor {
+    def apply(elements: FieldElements) = views.html.helper.bootstrap3.fieldConstructorTemplate(elements)
+  } 
+  
  
 }

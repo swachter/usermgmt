@@ -1,0 +1,15 @@
+@(elements: views.html.helper.FieldElements)
+<div class="form-group @if(elements.hasErrors) {has-error}" id="@elements.args.get('_id).getOrElse(elements.id + "_field")">
+  <label for="@elements.id">@elements.label(elements.lang)</label>
+  @if(elements.hasErrors) {
+  	<div class="input-group">
+      <span class="input-group-addon"><span class="glyphicon glyphicon-question-sign" data-content="@elements.errors.mkString("; ")"></span></span>
+      @elements.input
+  	</div>
+  } else {
+    @elements.input
+  }
+  @if(!elements.infos.isEmpty) {
+    <p class="help-block">@elements.infos.mkString("; ")</p>
+  }
+</div>

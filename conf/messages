@@ -1,0 +1,8 @@
+error.date = fehlerhaftes Datum
+error.required = fehlende Eingabe
+error.minLength = Mindestlänge: {0}
+error.number = fehlerhafte Zahl
+format.numeric = Zahlwert
+format.date    = JJJJ-MM-TT
+constraint.required = Pflichfeld
+constraint.minLength = Mindestlänge: {0}
