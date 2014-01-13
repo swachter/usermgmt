@@ -14,13 +14,13 @@
   @* Collect the nav links, forms, and other content for toggling *@
   <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
     <form class="navbar-form navbar-left" role="search" action="@routes.Application.navBar">
-      <button type="submit" class="btn" name="new">Neu</button>
+      <button type="submit" class="btn" name="new" title="Lege einen neuen Login an">Neu</button>
       <div class="form-group">
-        <input type="text" class="form-control" placeholder="Login" name="text" value="@request.session.get("search").getOrElse("")">
+        <input type="text" class="form-control" placeholder="Login oder Suchtext" name="text" value="@request.session.get("search").getOrElse("")">
       </div>
-      <button type="submit" class="btn" name="show">Anzeigen</button>
-      <button type="submit" class="btn" name="edit">Editieren</button>
-      <button type="submit" class="btn" name="search">Suchen</button>
+      <button type="submit" class="btn" name="show" title="Zeige einen Login an">Anzeigen</button>
+      <button type="submit" class="btn" name="edit" title="Editiere einen Login">Editieren</button>
+      <button type="submit" class="btn" name="search" title="Suche nach Logins">Suchen</button>
     </form>
   </div>
 </nav>

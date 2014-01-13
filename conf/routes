@@ -10,7 +10,7 @@ GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
 GET     /nav                        controllers.Application.navBar
 
-GET     /list                       controllers.Application.list
+GET     /list                       controllers.Application.list(search: Option[String])
 
 GET     /edit/:login                controllers.Application.editCustomer(login)
 

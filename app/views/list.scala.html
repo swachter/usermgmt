@@ -1,14 +1,34 @@
 @(customers: List[Customer])(implicit request: Request[_])
 
 @main("Suche Logins") {
-  <table>
-    @for(c <- customers) {
-      <tr>
-        <td>@c.login</td>
-        <td>@c.validFrom</td>
-        <td><a href="@routes.Application.editCustomer(c.login)">Editieren</a></td>
-        <td><a href="@routes.Application.showCustomer(c.login)">Anzeigen</a></td>
-      </tr>
-    }
-  </table>
+  @if(customers.isEmpty) {
+  	<div class="alert alert-info">Es wurden keine Logins gefunden</div>
+  } else {
+    <table class="table table-striped table-condensed">
+      <thead>
+        <th>Login</th>
+        <th>Gültig von</th>
+        <th>Gültig bis</th>
+        <th>Benutzer-Paßwort</th>
+        <th>Administrator-Paßwort</th>
+        <th>Stämme</th>
+        <th>Editieren</th>
+        <th>Anzeigen</th>
+      </thead>
+      <tbody>
+        @for(c <- customers) {
+          <tr>
+            <td>@c.login</td>
+            <td>@c.validFrom</td>
+            <td>@c.validUntil</td>
+            <td>@pwdGlyphicon(c.pwdHash)</td>
+            <td>@pwdGlyphicon(c.adminPwdHash)</td>
+            <td>@c.staemme</td>
+            <td><a href="@routes.Application.editCustomer(c.login)">Editieren</a></td>
+            <td><a href="@routes.Application.showCustomer(c.login)">Anzeigen</a></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
 }

@@ -24,7 +24,7 @@
   @{if (withDropDown) {
   	glyphiconWithDropDown(opt, adminNotUser)
   } else {
-    glyphicon(opt)
+    pwdGlyphicon(opt)
   }}
 }
 
@@ -32,7 +32,7 @@
 <div class="dropdown">
   <button class="btn dropdown-toggle" type="button" id="dropdownMenu-@adminNotUser" data-toggle="dropdown"
     data-content="@{s"""${if (adminNotUser) "Administrator" else "Benutzer"}-Paßwort ist ${if (opt.isEmpty) "nicht " else ""}gesetzt"""}">
-    @glyphicon(opt)
+    @pwdGlyphicon(opt)
     <span class="caret"></span>
   </button>
   <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu-@adminNotUser">
@@ -41,8 +41,4 @@
     <li role="presentation"><a role="menuitem" tabindex="-1" href="@routes.Application.modifyPassword(customer.login, false, adminNotUser)">Löschen</a></li>
   </ul>
 </div>
-}
-
-@glyphicon(opt: Option[_]) = {
-  <span class="glyphicon glyphicon-@{if (opt.isDefined) "ok" else "minus"}"/>	
 }

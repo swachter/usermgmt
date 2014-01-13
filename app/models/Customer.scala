@@ -26,6 +26,10 @@ object Customers {
     Query(CustomerTable).list
   }
   
+  def search(search: String): List[Customer] = DB.withSession { implicit session: Session =>
+    Query(CustomerTable).filter(_.login like search.replace('*', '%')).list
+  }
+  
   def insert(customer: Customer): Unit = DB.withSession { implicit session: Session =>
     CustomerTable.insert(customer)
   }

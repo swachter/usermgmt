@@ -12,6 +12,7 @@ import scala.util.Success
 import scala.util.Failure
 import views.html.helper.FieldConstructor
 import views.html.helper.FieldElements
+import play.mvc.Http.Response
 
 object Application extends Controller {
 
@@ -22,22 +23,30 @@ object Application extends Controller {
   def navBar = Action { implicit request => {
     val qs = request.queryString
     def searchText = qs.get("text").map(_.mkString).filter(!_.isEmpty())
+    def workWithOneLogin(f: String => SimpleResult): SimpleResult = {
+      val selectedLoginOrSearchText = request.session.get("selectedLogin") match {
+	      case s@Some(_) => s
+	      case _ => searchText
+      }
+      selectedLoginOrSearchText.map(f(_)).getOrElse(Redirect(routes.Application.index).flashing("error" -> "fehlende Eingabe"))
+    }
+    
     val response = if (qs.contains("show")) {
-      searchText.map(s => Redirect(routes.Application.showCustomer(s))).getOrElse(Redirect(routes.Application.index).flashing("error" -> "fehlende Eingabe"))
+      workWithOneLogin(s => Redirect(routes.Application.showCustomer(s)))
     } else if (qs.contains("edit")) {
-      searchText.map(s => Redirect(routes.Application.editCustomer(s))).getOrElse(Redirect(routes.Application.index).flashing("error" -> "fehlende Eingabe"))
+      workWithOneLogin(s => Redirect(routes.Application.editCustomer(s)))
     } else if (qs.contains("new")) {
       Redirect(routes.Application.newCustomer)
     } else {
       // search
-      Redirect(routes.Application.list)
+      Redirect(routes.Application.list(searchText))
     }
     response.withSession(request.session + ("search" -> searchText.getOrElse("")))
   }}
   
-  def list = Action { implicit request =>
-    val customers = Customers.list
-    Ok(views.html.list(customers))
+  def list(search: Option[String]) = Action { implicit request =>
+    val customers = search.map(Customers.search(_)).getOrElse (Customers.list)
+    Ok(views.html.list(customers)).withSession(request.session - "selectedLogin")
   }
   
   def newCustomer = Action { implicit request => 
@@ -53,7 +62,7 @@ object Application extends Controller {
       val customer = Customers.findByLogin(login)
       if (customer.isDefined) {
         val form = customerForm.fill(customer.get)
-        Ok(views.html.customerForm(form, false))  
+        Ok(views.html.customerForm(form, false)).withSession(request.session + ("selectedLogin" -> login))  
       } else {
         Redirect(routes.Application.index).flashing("error" -> ("unbekannter Login: " + login))
       }
@@ -92,7 +101,7 @@ object Application extends Controller {
   def showCustomer(login: String) = Action { implicit request =>
     val customer = Customers.findByLogin(login)
     if (customer.isDefined) {
-      Ok(views.html.showCustomer(customer.get))
+      Ok(views.html.showCustomer(customer.get)).withSession(request.session + ("selectedLogin" -> login))
     } else {
       Redirect(routes.Application.index).flashing("error" -> ("unbekannter Login: " + login))
     }
