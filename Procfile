@@ -1,1 +1,1 @@
-web: target/universal/stage/bin/usermgmt -DapplyEvolutions.default=true
+web: target/universal/stage/bin/usermgmt -DapplyEvolutions.default=true  -Dhttp.port=${PORT} 
